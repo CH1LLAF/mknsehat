@@ -1,98 +1,213 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+// Data menu makanan sehat
+const menuData = [
+  { id: '1', nama: 'Salad Sayur', kalori: '120 kkal', emoji: '🥗' },
+  { id: '2', nama: 'Oatmeal', kalori: '150 kkal', emoji: '🥣' },
+  { id: '3', nama: 'Buah Segar', kalori: '80 kkal', emoji: '🍎' },
+  { id: '4', nama: 'Sup Ayam', kalori: '200 kkal', emoji: '🍲' },
+];
 
-export default function HomeScreen() {
+// Data tips kesehatan
+const tipsData = [
+  { id: '1', tips: 'Minum 8 gelas air putih per hari' },
+  { id: '2', tips: 'Makan sayur dan buah setiap hari' },
+  { id: '3', tips: 'Hindari makanan tinggi gula' },
+  { id: '4', tips: 'Sarapan sebelum jam 9 pagi' },
+];
+
+export default function App() {
+  // Fungsi untuk menangani tombol
+  const handleLihatDetail = () => {
+    alert('Fitur detail menu akan segera hadir!');
+  };
+
+  // Fungsi untuk merender setiap item menu makanan
+  const renderMenuItem = ({ item }: any) => (
+    <View style={styles.menuCard}>
+      <Text style={styles.menuEmoji}>{item.emoji}</Text>
+      <Text style={styles.menuNama}>{item.nama}</Text>
+      <Text style={styles.menuKalori}>{item.kalori}</Text>
+    </View>
+  );
+
+  // Fungsi untuk merender setiap item tips kesehatan
+  const renderTipsItem = ({ item }: any) => (
+    <View style={styles.tipsItem}>
+      <Text style={styles.tipsIcon}>✅</Text>
+      <Text style={styles.tipsText}>{item.tips}</Text>
+    </View>
+  );
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <ScrollView style={styles.container}>
+      {/* Header Aplikasi */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>MakanSehat 🥦</Text>
+        <Text style={styles.headerSubtitle}>Panduan Menu Makan Sehat Harian</Text>
+      </View>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      {/* Banner Info Kalori */}
+      <View style={styles.bannerKalori}>
+        <Text style={styles.bannerLabel}>Kebutuhan Kalori Harian Anda</Text>
+        <Text style={styles.bannerKaloriAngka}>2.000 kkal</Text>
+        <TouchableOpacity style={styles.btnHitung} onPress={handleLihatDetail}>
+          <Text style={styles.btnHitungText}>Hitung Ulang</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Section Menu Sehat */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Menu Sehat Hari Ini</Text>
+        {/* FlatList untuk menampilkan daftar menu secara horizontal */}
+        <FlatList
+          data={menuData}
+          renderItem={renderMenuItem}
+          keyExtractor={(item) => item.id}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
+
+      {/* Section Tips Kesehatan */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Tips Kesehatan</Text>
+        {/* FlatList untuk menampilkan daftar tips */}
+        <FlatList
+          data={tipsData}
+          renderItem={renderTipsItem}
+          keyExtractor={(item) => item.id}
+          scrollEnabled={false}
+        />
+      </View>
+
+      {/* Tombol Mulai */}
+      <TouchableOpacity style={styles.btnMulai} onPress={handleLihatDetail}>
+        <Text style={styles.btnMulaiText}>Mulai Hidup Sehat 🌿</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    backgroundColor: '#F9F9F9',
+  },
+  header: {
+    backgroundColor: '#4CAF50',
+    padding: 30,
+    paddingTop: 50,
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: '#e0f2e0',
+    marginTop: 5,
+  },
+  bannerKalori: {
+    backgroundColor: '#fff',
+    margin: 16,
+    borderRadius: 12,
+    padding: 20,
+    alignItems: 'center',
+    elevation: 2,
+  },
+  bannerLabel: {
+    fontSize: 14,
+    color: '#888',
+  },
+  bannerKaloriAngka: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: '#4CAF50',
+    marginVertical: 8,
+  },
+  btnHitung: {
+    backgroundColor: '#E8F5E9',
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  btnHitungText: {
+    color: '#4CAF50',
+    fontWeight: '600',
+  },
+  section: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+  },
+  menuCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginRight: 12,
+    alignItems: 'center',
+    width: 110,
+    elevation: 2,
+  },
+  menuEmoji: {
+    fontSize: 32,
+    marginBottom: 6,
+  },
+  menuNama: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#333',
+    textAlign: 'center',
+  },
+  menuKalori: {
+    fontSize: 11,
+    color: '#888',
+    marginTop: 4,
+  },
+  tipsItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
+    backgroundColor: '#fff',
+    padding: 14,
+    borderRadius: 10,
     marginBottom: 8,
+    elevation: 1,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  tipsIcon: {
+    fontSize: 16,
+    marginRight: 10,
+  },
+  tipsText: {
+    fontSize: 14,
+    color: '#444',
+    flex: 1,
+  },
+  btnMulai: {
+    backgroundColor: '#4CAF50',
+    margin: 16,
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  btnMulaiText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
