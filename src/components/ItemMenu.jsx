@@ -1,92 +1,76 @@
 // src/components/ItemMenu.jsx
-// Komponen anak yang menerima PROPS dari ListMenu
-// Props: item, isFavorit, onPress
+// Komponen card menu horizontal (list) — bisa diklik → ke MenuDetail
+import React from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+const ItemMenu = ({ item }) => {
+  const router = useRouter();
 
-const ItemMenu = ({ item, isFavorit, onPress }) => {
+  const handlePress = () => {
+    // Navigate ke stack screen menu-detail dengan parameter menuId
+    router.push({
+      pathname: "/menu-detail",
+      params: { menuId: item.id },
+    });
+  };
+
   return (
-    <View style={styles.card}>
-      {/* Emoji makanan - berasal dari PROPS item */}
-      <Text style={styles.emoji}>{item.emoji}</Text>
+    <TouchableOpacity style={styles.cardItem} onPress={handlePress} activeOpacity={0.8}>
+      {/* Emoji / Gambar */}
+      <View style={styles.imageWrap}>
+        <Text style={{ fontSize: 32 }}>{item.emoji}</Text>
+      </View>
 
-      <View style={styles.info}>
-        {/* Nama kategori - berasal dari PROPS item */}
-        <Text style={styles.kategori}>{item.kategori}</Text>
-
-        {/* Nama menu - berasal dari PROPS item */}
-        <Text style={styles.nama}>{item.nama}</Text>
-
-        <View style={styles.footer}>
-          <Text style={styles.kalori}>🔥 {item.kalori} kkal</Text>
-          <Text style={styles.tanggal}>📅 {item.createdAt}</Text>
-          <Text style={styles.suka}>❤️ {item.totalSuka}</Text>
+      {/* Info */}
+      <View style={{ flex: 1, gap: 3 }}>
+        <Text style={styles.category}>{item.category}</Text>
+        <Text style={styles.name}>{item.name}</Text>
+        <View style={styles.metaRow}>
+          <Text style={styles.metaText}>🔥 {item.kalori} kkal</Text>
+          <Text style={styles.metaText}>  📅 {item.savedAt}</Text>
+          <Text style={styles.metaText}>  ❤️ {item.likes}</Text>
         </View>
       </View>
 
-      {/* Tombol favorit - menggunakan PROPS isFavorit & onPress */}
-      <TouchableOpacity onPress={onPress} style={styles.btnFavorit}>
-        <Text style={{ fontSize: 22 }}>
-          {isFavorit ? '❤️' : '🤍'}
-        </Text>
+      {/* Bookmark icon */}
+      <TouchableOpacity style={styles.bookmarkIcon}>
+        <Text style={{ fontSize: 18, color: "#ccc" }}>🤍</Text>
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 export default ItemMenu;
 
+const GREEN = "#3a8c34";
+const GREEN_LIGHT = "#e8f5e2";
+
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
+  cardItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderRadius: 14,
     padding: 14,
-    marginHorizontal: 16,
-    marginVertical: 6,
-    flexDirection: 'row',
-    alignItems: 'center',
+    gap: 12,
+    marginBottom: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
     elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
   },
-  emoji: {
-    fontSize: 40,
-    marginRight: 12,
+  imageWrap: {
+    width: 58,
+    height: 58,
+    backgroundColor: GREEN_LIGHT,
+    borderRadius: 14,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  info: {
-    flex: 1,
-    gap: 4,
-  },
-  kategori: {
-    fontSize: 11,
-    color: '#4CAF50',
-    fontWeight: '600',
-  },
-  nama: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#222',
-  },
-  footer: {
-    flexDirection: 'row',
-    gap: 10,
-    marginTop: 4,
-  },
-  kalori: {
-    fontSize: 11,
-    color: '#888',
-  },
-  tanggal: {
-    fontSize: 11,
-    color: '#888',
-  },
-  suka: {
-    fontSize: 11,
-    color: '#888',
-  },
-  btnFavorit: {
-    padding: 6,
-  },
+  category: { fontSize: 11, color: GREEN, fontWeight: "700" },
+  name: { fontSize: 15, fontWeight: "700", color: "#222" },
+  metaRow: { flexDirection: "row", flexWrap: "wrap" },
+  metaText: { fontSize: 11, color: "#888" },
+  bookmarkIcon: { padding: 4 },
 });

@@ -1,77 +1,74 @@
 // src/components/ItemMenuHorizontal.jsx
-// Komponen anak untuk tampilan horizontal (menu unggulan)
-// Props: item, isFavorit, onPress
+// Komponen card menu vertikal (grid/horizontal scroll) — bisa diklik → ke MenuDetail
+import React from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+const ItemMenuHorizontal = ({ item }) => {
+  const router = useRouter();
 
-const ItemMenuHorizontal = ({ item, isFavorit, onPress }) => {
+  const handlePress = () => {
+    router.push({
+      pathname: "/menu-detail",
+      params: { menuId: item.id },
+    });
+  };
+
   return (
-    <View style={styles.card}>
-      {/* Latar belakang warna */}
-      <View style={styles.emojiBg}>
-        <Text style={styles.emoji}>{item.emoji}</Text>
-      </View>
-
-      {/* Tombol favorit - PROPS: isFavorit & onPress */}
-      <TouchableOpacity onPress={onPress} style={styles.btnFavorit}>
-        <Text style={{ fontSize: 18 }}>
-          {isFavorit ? '❤️' : '🤍'}
-        </Text>
+    <TouchableOpacity style={styles.card} onPress={handlePress} activeOpacity={0.8}>
+      {/* Bookmark badge */}
+      <TouchableOpacity style={styles.heartBtn}>
+        <Text style={{ fontSize: 16 }}>🤍</Text>
       </TouchableOpacity>
 
-      {/* Info menu - semua dari PROPS item */}
-      <Text style={styles.kategori}>{item.kategori}</Text>
-      <Text style={styles.nama} numberOfLines={2}>{item.nama}</Text>
+      {/* Emoji */}
+      <View style={styles.emojiWrap}>
+        <Text style={{ fontSize: 36 }}>{item.emoji}</Text>
+      </View>
+
+      {/* Info */}
+      <Text style={styles.category}>{item.category}</Text>
+      <Text style={styles.name} numberOfLines={2}>{item.name}</Text>
       <Text style={styles.kalori}>🔥 {item.kalori} kkal</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 export default ItemMenuHorizontal;
 
+const GREEN = "#3a8c34";
+const GREEN_LIGHT = "#e8f5e2";
+
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    width: 140,
+    backgroundColor: "#fff",
     borderRadius: 16,
     padding: 14,
-    width: 150,
+    marginRight: 10,
+    gap: 4,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
     elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    position: "relative",
   },
-  emojiBg: {
-    backgroundColor: '#E8F5E9',
-    borderRadius: 12,
-    width: 60,
-    height: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 8,
-  },
-  emoji: {
-    fontSize: 34,
-  },
-  btnFavorit: {
-    position: 'absolute',
+  heartBtn: {
+    position: "absolute",
     top: 10,
     right: 10,
+    zIndex: 10,
   },
-  kategori: {
-    fontSize: 10,
-    color: '#4CAF50',
-    fontWeight: '600',
-    marginBottom: 2,
-  },
-  nama: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    color: '#222',
+  emojiWrap: {
+    width: 56,
+    height: 56,
+    backgroundColor: GREEN_LIGHT,
+    borderRadius: 14,
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 6,
   },
-  kalori: {
-    fontSize: 11,
-    color: '#888',
-  },
+  category: { fontSize: 10, color: GREEN, fontWeight: "700" },
+  name: { fontSize: 13, fontWeight: "700", color: "#222", lineHeight: 18 },
+  kalori: { fontSize: 11, color: "#888", marginTop: 2 },
 });

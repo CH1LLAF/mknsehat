@@ -4,7 +4,7 @@
 export const MenuList = [
   {
     id: 1,
-    nama: 'Salad Sayur Segar',
+    name: 'Salad Sayur Segar',
     kategori: 'Makan Siang',
     kalori: 120,
     emoji: '🥗',
@@ -13,7 +13,7 @@ export const MenuList = [
   },
   {
     id: 2,
-    nama: 'Oatmeal Pisang',
+    name: 'Oatmeal Pisang',
     kategori: 'Sarapan',
     kalori: 150,
     emoji: '🥣',
@@ -22,7 +22,7 @@ export const MenuList = [
   },
   {
     id: 3,
-    nama: 'Buah Segar Mix',
+    name: 'Buah Segar Mix',
     kategori: 'Cemilan',
     kalori: 80,
     emoji: '🍎',
@@ -31,7 +31,7 @@ export const MenuList = [
   },
   {
     id: 4,
-    nama: 'Sup Ayam Bening',
+    name: 'Sup Ayam Bening',
     kategori: 'Makan Malam',
     kalori: 200,
     emoji: '🍲',
@@ -40,7 +40,7 @@ export const MenuList = [
   },
   {
     id: 5,
-    nama: 'Smoothie Alpukat',
+    name: 'Smoothie Alpukat',
     kategori: 'Minuman',
     kalori: 160,
     emoji: '🥤',
@@ -49,7 +49,7 @@ export const MenuList = [
   },
   {
     id: 6,
-    nama: 'Nasi Merah Tempe',
+    name: 'Nasi Merah Tempe',
     kategori: 'Makan Siang',
     kalori: 310,
     emoji: '🍚',
@@ -58,7 +58,7 @@ export const MenuList = [
   },
   {
     id: 7,
-    nama: 'Telur Rebus',
+    name: 'Telur Rebus',
     kategori: 'Sarapan',
     kalori: 78,
     emoji: '🥚',
@@ -67,7 +67,7 @@ export const MenuList = [
   },
   {
     id: 8,
-    nama: 'Tahu Kukus',
+    name: 'Tahu Kukus',
     kategori: 'Makan Malam',
     kalori: 95,
     emoji: '🧆',
