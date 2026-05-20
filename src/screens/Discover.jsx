@@ -1,0 +1,172 @@
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  FlatList,
+  Animated,
+  Pressable,
+} from "react-native";
+import React, { useRef } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { BlogList } from "../data/blogs";
+import ItemSmall from "../components/ItemSmall";
+import { Search } from "lucide-react-native";
+import { colors } from "../../assets/theme";
+import { useNavigation } from "@react-navigation/native";
+
+const data = [
+  { id: 1, label: "React" },
+  { id: 2, label: "WWDC" },
+  { id: 3, label: "Best Sneaker" },
+  { id: 4, label: "Setup PC" },
+  { id: 5, label: "Car" },
+];
+
+const ItemRecent = ({ item }) => {
+  return (
+    <View style={recent.button}>
+      <Text style={recent.label}>{item.label}</Text>
+    </View>
+  );
+};
+const FlatListRecent = () => {
+  const renderItem = ({ item }) => {
+    return <ItemRecent item={item} />;
+  };
+  return (
+    <FlatList
+      data={data}
+      keyExtractor={(item) => item.id}
+      renderItem={(item) => renderItem({ ...item })}
+      ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
+      contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 10 }}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+    />
+  );
+};
+
+const Discover = () => {
+  const navigation = useNavigation();
+  const recentBlog = BlogList.slice(5);
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const diffClampY = Animated.diffClamp(scrollY, 0, 142);
+  const recentY = diffClampY.interpolate({
+    inputRange: [0, 142],
+    outputRange: [0, -142],
+    extrapolate: "clamp",
+  });
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Pressable
+            onPress={() => navigation.navigate("SearchPage")}
+            style={{ flex: 1 }}
+          >
+            <View style={styles.bar}>
+              <Search size={18} color={colors.grey(0.5)} />
+              <Text style={styles.placeholder}>Search</Text>
+            </View>
+          </Pressable>
+        </View>
+        <Animated.View
+          style={[recent.container, { transform: [{ translateY: recentY }] }]}
+        >
+          <Text style={recent.text}>Recent Search</Text>
+          <FlatListRecent />
+        </Animated.View>
+        <Animated.ScrollView
+          showsVerticalScrollIndicator={false}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+            { useNativeDriver: true },
+          )}
+          contentContainerStyle={{ paddingTop: 142 }}
+        >
+          <View style={styles.listCard}>
+            {recentBlog.map((item, index) => (
+              <ItemSmall item={item} key={index} />
+            ))}
+          </View>
+        </Animated.ScrollView>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default Discover;
+
+const styles = StyleSheet.create({
+  listCard: {
+    paddingBottom: 10,
+    gap: 10,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: colors.white(),
+  },
+  header: {
+    paddingHorizontal: 24,
+    flexDirection: "row",
+    alignItems: "center",
+    height: 52,
+    paddingTop: 8,
+    paddingBottom: 4,
+    position: "absolute",
+    top: 0,
+    zIndex: 1000,
+    right: 0,
+    left: 0,
+    backgroundColor: colors.white(),
+  },
+  bar: {
+    flexDirection: "row",
+    padding: 10,
+    gap: 10,
+    alignItems: "center",
+    backgroundColor: colors.grey(0.05),
+    borderRadius: 10,
+    flex: 1,
+  },
+  placeholder: {
+    fontSize: 14,
+    fontFamily: "Pjs-Medium",
+    color: colors.grey(0.5),
+    lineHeight: 18,
+  },
+});
+
+const recent = StyleSheet.create({
+  container: {
+    position: "absolute",
+    backgroundColor: colors.white(),
+    zIndex: 999,
+    top: 52,
+    left: 0,
+    right: 0,
+    elevation: 1000,
+  },
+  button: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 25,
+    borderColor: colors.grey(0.15),
+    borderWidth: 1,
+    backgroundColor: colors.grey(0.03),
+  },
+  label: {
+    fontSize: 12,
+    fontFamily: "Pjs-Medium",
+    color: colors.grey(0.65),
+  },
+  text: {
+    fontSize: 14,
+    fontFamily: "Pjs-Bold",
+    color: colors.black(),
+    paddingVertical: 5,
+    paddingHorizontal: 24,
+  },
+});
